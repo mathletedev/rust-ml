@@ -6,8 +6,16 @@ pub struct Activation<'a> {
 	pub derivative: &'a dyn Fn(f64) -> f64,
 }
 
+pub const IDENTITY: Activation = Activation {
+	function: &|x| x,
+	derivative: &|_| 1.0,
+};
+
+fn sigmoid(x: f64) -> f64 {
+	1.0 / (1.0 + E.powf(-x))
+}
 pub const SIGMOID: Activation = Activation {
-	function: &|x| E.powf(x) / (E.powf(x) + 1.0),
+	function: &|x| sigmoid(x),
 	derivative: &|x| x * (1.0 - x),
 };
 
