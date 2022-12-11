@@ -38,7 +38,7 @@ impl Matrix {
 		}
 	}
 
-	pub fn multiply(&mut self, other: &Matrix) -> Matrix {
+	pub fn multiply(&self, other: &Matrix) -> Matrix {
 		if self.cols != other.rows {
 			panic!("Attempted to multiply by matrix of incorrect dimensions");
 		}
@@ -59,7 +59,7 @@ impl Matrix {
 		res
 	}
 
-	pub fn add(&mut self, other: &Matrix) -> Matrix {
+	pub fn add(&self, other: &Matrix) -> Matrix {
 		if self.rows != other.rows || self.cols != other.cols {
 			panic!("Attempted to add matrix of incorrect dimensions");
 		}
@@ -75,7 +75,7 @@ impl Matrix {
 		res
 	}
 
-	pub fn dot_multiply(&mut self, other: &Matrix) -> Matrix {
+	pub fn dot_multiply(&self, other: &Matrix) -> Matrix {
 		if self.rows != other.rows || self.cols != other.cols {
 			panic!("Attempted to dot multiply by matrix of incorrect dimensions");
 		}
@@ -91,7 +91,7 @@ impl Matrix {
 		res
 	}
 
-	pub fn subtract(&mut self, other: &Matrix) -> Matrix {
+	pub fn subtract(&self, other: &Matrix) -> Matrix {
 		if self.rows != other.rows || self.cols != other.cols {
 			panic!("Attempted to subtract matrix of incorrect dimensions");
 		}
@@ -107,7 +107,7 @@ impl Matrix {
 		res
 	}
 
-	pub fn map(&mut self, function: &dyn Fn(f64) -> f64) -> Matrix {
+	pub fn map(&self, function: &dyn Fn(f64) -> f64) -> Matrix {
 		Matrix::from(
 			(self.data)
 				.clone()
@@ -117,7 +117,7 @@ impl Matrix {
 		)
 	}
 
-	pub fn transpose(&mut self) -> Matrix {
+	pub fn transpose(&self) -> Matrix {
 		let mut res = Matrix::zeros(self.cols, self.rows);
 
 		for i in 0..self.rows {

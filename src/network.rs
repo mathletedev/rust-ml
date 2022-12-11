@@ -71,7 +71,7 @@ impl Network<'_> {
 			panic!("Invalid targets length");
 		}
 
-		let mut parsed = Matrix::from(vec![outputs]);
+		let parsed = Matrix::from(vec![outputs]);
 		let mut errors = Matrix::from(vec![targets]).subtract(&parsed);
 		let mut gradients = parsed.map(self.activation.derivative);
 
@@ -100,7 +100,7 @@ impl Network<'_> {
 		}
 	}
 
-	pub fn save(&mut self, file: String) {
+	pub fn save(&self, file: String) {
 		let mut file = File::create(file).expect("Unable to touch save file");
 
 		file.write_all(
