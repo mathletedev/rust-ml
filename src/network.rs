@@ -63,7 +63,7 @@ impl Network<'_> {
 			self.data.push(current.clone());
 		}
 
-		current.data[0].to_owned()
+		current.transpose().data[0].to_owned()
 	}
 
 	pub fn back_propogate(&mut self, outputs: Vec<f64>, targets: Vec<f64>) {
@@ -71,8 +71,8 @@ impl Network<'_> {
 			panic!("Invalid targets length");
 		}
 
-		let parsed = Matrix::from(vec![outputs]);
-		let mut errors = Matrix::from(vec![targets]).subtract(&parsed);
+		let parsed = Matrix::from(vec![outputs]).transpose();
+		let mut errors = Matrix::from(vec![targets]).transpose().subtract(&parsed);
 		let mut gradients = parsed.map(self.activation.derivative);
 
 		for i in (0..self.layers.len() - 1).rev() {
