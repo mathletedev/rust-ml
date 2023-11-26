@@ -8,13 +8,13 @@ use serde_json::{from_str, json};
 
 use super::{activations::Activation, matrix::Matrix};
 
-pub struct Network<'a> {
+pub struct Network<T: Activation> {
 	layers: Vec<usize>,
 	weights: Vec<Matrix>,
 	biases: Vec<Matrix>,
 	data: Vec<Matrix>,
 	learning_rate: f64,
-	activation: Activation<'a>,
+	activation: std::marker::PhantomData<T>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -23,12 +23,8 @@ struct SaveData {
 	biases: Vec<Vec<Vec<f64>>>,
 }
 
-impl Network<'_> {
-	pub fn new<'a>(
-		layers: Vec<usize>,
-		learning_rate: f64,
-		activation: Activation<'a>,
-	) -> Network<'a> {
+impl<T: Activation> Network<T> {
+	pub fn new<'a>(layers: Vec<usize>, learning_rate: f64) -> Self {
 		let mut weights = vec![];
 		let mut biases = vec![];
 
@@ -43,7 +39,7 @@ impl Network<'_> {
 			biases,
 			data: vec![],
 			learning_rate,
-			activation,
+			activation: std::marker::PhantomData,
 		}
 	}
 
@@ -59,7 +55,7 @@ impl Network<'_> {
 			current = self.weights[i]
 				.multiply(&current)
 				.add(&self.biases[i])
-				.map(self.activation.function);
+				.map(T::function);
 			self.data.push(current.clone());
 		}
 
@@ -73,7 +69,7 @@ impl Network<'_> {
 
 		let parsed = Matrix::from(vec![outputs]).transpose();
 		let mut errors = Matrix::from(vec![targets]).transpose().subtract(&parsed);
-		let mut gradients = parsed.map(self.activation.derivative);
+		let mut gradients = parsed.map(T::derivative);
 
 		for i in (0..self.layers.len() - 1).rev() {
 			gradients = gradients
@@ -84,7 +80,7 @@ impl Network<'_> {
 			self.biases[i] = self.biases[i].add(&gradients);
 
 			errors = self.weights[i].transpose().multiply(&errors);
-			gradients = self.data[i].map(self.activation.derivative);
+			gradients = self.data[i].map(T::derivative);
 		}
 	}
 

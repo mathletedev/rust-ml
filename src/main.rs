@@ -1,4 +1,4 @@
-use activations::SIGMOID;
+use activations::Sigmoid;
 use network::Network;
 
 pub mod activations;
@@ -14,7 +14,7 @@ fn main() {
 	];
 	let targets = vec![vec![0.0], vec![1.0], vec![1.0], vec![0.0]];
 
-	let mut network = Network::new(vec![2, 3, 1], 0.5, SIGMOID);
+	let mut network = Network::<Sigmoid>::new(vec![2, 3, 1], 0.5);
 
 	network.train(inputs, targets, 1000);
 

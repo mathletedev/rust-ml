@@ -107,7 +107,7 @@ impl Matrix {
 		res
 	}
 
-	pub fn map(&self, function: &dyn Fn(f64) -> f64) -> Matrix {
+	pub fn map(&self, function: impl Fn(f64) -> f64) -> Matrix {
 		Matrix::from(
 			(self.data)
 				.clone()
